@@ -1,29 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Button, Card } from 'react-bootstrap'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="bg-black text-white p-3">
+        <h1>Blog</h1>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className="p-3">
+        <Card className="m-3" style={{ width: '18rem' }}>
+          <Card.Img variant="top" src="https://picsum.photos/200/200" height={200} />
+          <Card.Body>
+            <Card.Title>Title</Card.Title>
+            <Card.Text>contents</Card.Text>
+          </Card.Body>
+          <Button className="border-0" variant="outline-primary" size="sm">
+            👍 0
+          </Button>
+        </Card>
       </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
     </>
   )
 }
