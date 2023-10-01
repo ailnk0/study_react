@@ -1,37 +1,28 @@
-import { useState } from 'react'
-import { Button, Card } from 'react-bootstrap'
+import Container from 'react-bootstrap/Container'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import { Routes, Route } from 'react-router-dom'
+import About from './routes/About'
+import Home from './routes/Home'
+import Error from './routes/Error'
 
 function App() {
-  const [title] = useState('Title')
-  const [contents] = useState('Contents')
-  const [count, setCount] = useState(0)
-
-  function addCount(v: number) {
-    setCount((count) => count + v)
-  }
-
   return (
     <>
-      <div className="bg-black text-white p-3">
-        <h1>Blog</h1>
-      </div>
-      <div className="p-3">
-        <Card className="m-3" style={{ width: '18rem' }}>
-          <Card.Img variant="top" src="https://picsum.photos/200/200" height={200} />
-          <Card.Body>
-            <Card.Title>{title}</Card.Title>
-            <Card.Text>{contents}</Card.Text>
-          </Card.Body>
-          <Button
-            className="border-0"
-            variant="outline-primary"
-            size="sm"
-            onClick={() => addCount(1)}
-          >
-            👍 {count}
-          </Button>
-        </Card>
-      </div>
+      <Navbar bg="dark" data-bs-theme="dark">
+        <Container>
+          <Navbar.Brand href="/">Blog</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/About">About</Nav.Link>
+          </Nav>
+        </Container>
+      </Navbar>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<Error />} />
+      </Routes>
     </>
   )
 }
