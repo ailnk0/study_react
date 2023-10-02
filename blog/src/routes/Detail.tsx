@@ -7,14 +7,17 @@ function Detail() {
   const parsedId = id ? parseInt(id) : -1
 
   const postData: {
-    id: number
-    title: string
-    content: string
-  }[] = useSelector((state: { postData: typeof postData }) => {
+    index: number
+    data: {
+      id: number
+      title: string
+      content: string
+    }[]
+  } = useSelector((state: { postData: typeof postData }) => {
     return state.postData
   })
 
-  const item = postData.find((postData) => postData.id === parsedId)
+  const item = postData.data.find((item) => item.id === parsedId)
   if (item === undefined) {
     return <Navigate to="/404" />
   }
