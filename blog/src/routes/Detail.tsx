@@ -1,11 +1,20 @@
 import { Container } from 'react-bootstrap'
 import { Navigate, useParams } from 'react-router-dom'
-import Datas from '../utils/Datas.tsx'
+import { useSelector } from 'react-redux'
 
 function Detail() {
   const { id } = useParams()
   const parsedId = id ? parseInt(id) : -1
-  const item = Datas.find((data) => data.id === parsedId)
+
+  const postData: {
+    id: number
+    title: string
+    content: string
+  }[] = useSelector((state: { postData: typeof postData }) => {
+    return state.postData
+  })
+
+  const item = postData.find((postData) => postData.id === parsedId)
   if (item === undefined) {
     return <Navigate to="/404" />
   }
@@ -18,8 +27,8 @@ function Detail() {
       className="d-flex flex-column justify-content-center align-items-center"
     >
       <img src={'https://picsum.photos/seed/' + id + '/500/500'} alt="random" />
-      <h1>{item?.title}</h1>
-      <p>{item?.content}</p>
+      <h1>{item.title}</h1>
+      <p>{item.content}</p>
     </Container>
   )
 }
