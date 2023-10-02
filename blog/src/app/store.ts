@@ -22,7 +22,16 @@ const postData = createSlice({
       }
     ]
   },
-  reducers: {}
+  reducers: {
+    addPost: (state, action) => {
+      state.data.push({
+        id: state.index,
+        title: action.payload.title,
+        content: action.payload.content
+      })
+      state.index++
+    }
+  }
 })
 
 export const store = configureStore({
@@ -30,3 +39,5 @@ export const store = configureStore({
     postData: postData.reducer
   }
 })
+
+export const { addPost } = postData.actions

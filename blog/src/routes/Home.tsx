@@ -1,6 +1,7 @@
 import { Col, Container, Row } from 'react-bootstrap'
 import Post from '../components/Post'
 import { useSelector } from 'react-redux'
+import WritePost from '../components/WritePost'
 
 function Home() {
   const postData: {
@@ -17,6 +18,7 @@ function Home() {
   return (
     <>
       <Container>
+        <WritePost />
         <Row>
           {postData.data
             .slice()
