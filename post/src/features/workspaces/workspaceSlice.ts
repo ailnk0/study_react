@@ -6,7 +6,7 @@ const workspacesRepo: HLocalWorkspacesRepo = new HLocalWorkspacesRepo()
 
 const workspaceSlice = createSlice({
   name: 'workspaces',
-  initialState: { repo: DEFAULT_WORKSPACES },
+  initialState: { repo: workspacesRepo.getData() ?? DEFAULT_WORKSPACES },
   reducers: {
     save: (state, action: PayloadAction<HWorkspace>) => {
       workspacesRepo.save(action.payload)
