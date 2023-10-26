@@ -1,18 +1,14 @@
-import * as React from 'react'
 import ListSubheader from '@mui/material/ListSubheader'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import Collapse from '@mui/material/Collapse'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import DraftsIcon from '@mui/icons-material/Drafts'
 import SendIcon from '@mui/icons-material/Send'
-import ExpandLess from '@mui/icons-material/ExpandLess'
-import ExpandMore from '@mui/icons-material/ExpandMore'
-import StarBorder from '@mui/icons-material/StarBorder'
 import { Box, Button, ButtonGroup, IconButton } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { HWorkspace } from '../repositories/HWorkspacesRepo'
+import { save } from '../features/workspaces/workspaceSlice'
 
 const buttons = [
   <Button key="new">New</Button>,
@@ -21,16 +17,24 @@ const buttons = [
 ]
 
 export default function NestedList() {
-  const [open, setOpen] = React.useState(true)
+  const dispatch = useAppDispatch()
+  const repo = useAppSelector((state) => state.workspaces.repo)
 
-  const handleClick = () => {
-    setOpen(!open)
+  const addWorkspace = () => {
+    const workspace: HWorkspace = {
+      id: 0,
+      name: 'My workspace',
+      desc: 'My workspace description',
+      sequence: 0,
+      collections: []
+    }
+    dispatch(save(workspace))
   }
 
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <IconButton aria-label="delete">
+        <IconButton aria-label="delete" onClick={addWorkspace}>
           <AddIcon />
         </IconButton>
         <Box
@@ -58,38 +62,14 @@ export default function NestedList() {
           </ListSubheader>
         }
       >
-        <ListItemButton>
-          <ListItemIcon>
-            <SendIcon />
-          </ListItemIcon>
-          <ListItemText primary="Workspace 1" />
-        </ListItemButton>
-
-        <ListItemButton>
-          <ListItemIcon>
-            <DraftsIcon />
-          </ListItemIcon>
-          <ListItemText primary="Workspace 2" />
-        </ListItemButton>
-
-        <ListItemButton onClick={handleClick}>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse>
+        {repo.workspaces.map((workspace) => (
+          <ListItemButton key={workspace.id}>
+            <ListItemIcon>
+              <SendIcon />
+            </ListItemIcon>
+            <ListItemText primary={workspace.name} />
+          </ListItemButton>
+        ))}
       </List>
     </Box>
   )
