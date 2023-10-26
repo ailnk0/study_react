@@ -1,20 +1,20 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { DEFAULT_WORKSPACES, HLocalWorkspacesRepo } from '../../repositories/HLocalWorkspacesRepo'
+import { DEFAULT_WORKSPACES } from '../../repositories/HLocalWorkspacesRepo'
 import { HWorkspace } from '../../repositories/HWorkspacesRepo'
-
-const workspacesRepo: HLocalWorkspacesRepo = new HLocalWorkspacesRepo()
 
 const workspaceSlice = createSlice({
   name: 'workspaces',
-  initialState: { repo: workspacesRepo.getData() ?? DEFAULT_WORKSPACES },
+  initialState: { repo: DEFAULT_WORKSPACES },
   reducers: {
     save: (state, action: PayloadAction<HWorkspace>) => {
-      workspacesRepo.save(action.payload)
-      state.repo = workspacesRepo.getData() ?? DEFAULT_WORKSPACES
+      action.payload.id = state.repo.sequence++
+      state.repo.workspaces.push(action.payload)
     },
     delete: (state, action: PayloadAction<number>) => {
-      workspacesRepo.deleteById(action.payload)
-      state.repo = workspacesRepo.getData() ?? DEFAULT_WORKSPACES
+      const index = state.repo.workspaces.findIndex((w: HWorkspace) => w.id === action.payload)
+      if (index !== -1) {
+        state.repo.workspaces = state.repo.workspaces.splice(index, 1)
+      }
     }
   }
 })
