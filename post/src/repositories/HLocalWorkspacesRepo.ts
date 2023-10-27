@@ -11,61 +11,35 @@ export class HLocalWorkspacesRepo implements HWorkspacesRepo {
 
   getData(): HWorkspacesData | undefined {
     try {
-      const data = localStorage.getItem(this.KEY)
-      if (data) {
-        return JSON.parse(data)
-      }
-    } catch {
-      /* empty */
+      return JSON.parse(localStorage.getItem(this.KEY) ?? '{}')
+    } catch (e) {
+      console.log(e)
     }
-    try {
-      localStorage.setItem(this.KEY, JSON.stringify(DEFAULT_WORKSPACES))
-    } catch {
-      /* empty */
-    }
-    return DEFAULT_WORKSPACES
   }
   setData(data: HWorkspacesData) {
     try {
       localStorage.setItem(this.KEY, JSON.stringify(data))
-    } catch {
-      /* empty */
+    } catch (e) {
+      console.log(e)
     }
   }
   findById(id: number): HWorkspace | undefined {
-    const data = this.getData() as HWorkspacesData
-    if (!data) {
-      return undefined
-    }
-    return data.workspaces.find((w: HWorkspace) => w.id === id)
+    return this.getData()?.workspaces?.find((w: HWorkspace) => w.id === id)
   }
   findByName(name: string): HWorkspace | undefined {
-    const data = this.getData() as HWorkspacesData
-    if (!data) {
-      return undefined
-    }
-    return data.workspaces.find((w: HWorkspace) => w.name === name)
+    return this.getData()?.workspaces?.find((w: HWorkspace) => w.name === name)
   }
   findAll(): HWorkspace[] {
-    const data = this.getData() as HWorkspacesData
-    if (!data) {
-      return []
-    }
-    return data.workspaces
+    return this.getData()?.workspaces ?? []
   }
   save(workspace: HWorkspace): HWorkspace | undefined {
-    console.log('save', workspace)
     const data = this.getData()
     if (!data) {
       return undefined
     }
     workspace.id = data.sequence++
     data.workspaces.push(workspace)
-    try {
-      localStorage.setItem(this.KEY, JSON.stringify(data))
-    } catch {
-      return undefined
-    }
+    this.setData(data)
     return workspace
   }
   deleteById(id: number): number {
@@ -76,15 +50,11 @@ export class HLocalWorkspacesRepo implements HWorkspacesRepo {
     const index = data.workspaces.findIndex((w: HWorkspace) => w.id === id)
     if (index !== -1) {
       data.workspaces = data.workspaces.splice(index, 1)
-      localStorage.setItem(this.KEY, JSON.stringify(data))
+      this.setData(data)
     }
     return index
   }
   count(): number {
-    const data = this.getData()
-    if (!data) {
-      return -1
-    }
-    return data.workspaces.length
+    return this.getData()?.workspaces?.length ?? -1
   }
 }
