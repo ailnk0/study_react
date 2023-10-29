@@ -4,39 +4,33 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import SendIcon from '@mui/icons-material/Send'
-import { Box, Button, ButtonGroup, IconButton } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
+import { Box, Button, ButtonGroup } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { Workspace } from '../features/workspaces/Workspace'
-import { save } from '../features/workspaces/Slice'
-
-const buttons = [
-  <Button key="new">New</Button>,
-  <Button key="import">Import</Button>,
-  <Button key="export">Export</Button>
-]
+import { showCreate } from '../features/workspaces/Slice'
+import CreateDlg from '../features/workspaces/components/CreateDlg'
 
 export default function NestedList() {
   const dispatch = useAppDispatch()
-  const workspaces = useAppSelector((state) => state.workspaces.col)
+  const workspaces = useAppSelector((state) => state.workspaces.displayed.col)
 
-  const addWorkspace = () => {
-    const workspace: Workspace = {
-      id: 0,
-      name: 'My workspace',
-      desc: 'My workspace description',
-      sequence: 0,
-      collections: []
-    }
-    dispatch(save(workspace))
+  const handleAdd = () => {
+    dispatch(showCreate(true))
   }
+
+  const buttons = [
+    <Button key="new" onClick={handleAdd}>
+      New
+    </Button>,
+    <Button key="import">Import</Button>,
+    <Button key="export">Export</Button>
+  ]
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <IconButton aria-label="delete" onClick={addWorkspace}>
-          <AddIcon />
-        </IconButton>
+      <Box>
+        <CreateDlg />
+      </Box>
+      <Box>
         <Box
           sx={{
             display: 'flex',
