@@ -8,7 +8,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import CssBaseline from '@mui/material/CssBaseline'
 import { Provider } from 'react-redux'
-import { persistor, store } from './store.ts'
+import { persistor, store } from './app/store'
 import { PersistGate } from 'redux-persist/integration/react'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

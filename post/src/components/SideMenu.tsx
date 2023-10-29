@@ -6,9 +6,9 @@ import ListItemText from '@mui/material/ListItemText'
 import SendIcon from '@mui/icons-material/Send'
 import { Box, Button, ButtonGroup, IconButton } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import { useAppDispatch, useAppSelector } from '../hooks'
-import { HWorkspace } from '../repositories/HWorkspacesRepo'
-import { save } from '../features/workspaces/workspaceSlice'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { Workspace } from '../features/workspaces/Workspace'
+import { save } from '../features/workspaces/Slice'
 
 const buttons = [
   <Button key="new">New</Button>,
@@ -18,10 +18,10 @@ const buttons = [
 
 export default function NestedList() {
   const dispatch = useAppDispatch()
-  const repo = useAppSelector((state) => state.workspaces.repo)
+  const workspaces = useAppSelector((state) => state.workspaces.col)
 
   const addWorkspace = () => {
-    const workspace: HWorkspace = {
+    const workspace: Workspace = {
       id: 0,
       name: 'My workspace',
       desc: 'My workspace description',
@@ -62,7 +62,7 @@ export default function NestedList() {
           </ListSubheader>
         }
       >
-        {repo.workspaces.map((workspace) => (
+        {workspaces.map((workspace) => (
           <ListItemButton key={workspace.id}>
             <ListItemIcon>
               <SendIcon />
