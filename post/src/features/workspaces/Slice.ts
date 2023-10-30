@@ -6,13 +6,13 @@ const repo = new MemoryWorkspacesRepo()
 const workspaceSlice = createSlice({
   name: 'workspaces',
   initialState: {
-    displayed: repo.getWorkspaces(),
+    displayed: repo.data,
     selected: 0,
     isCreate: false
   },
   reducers: {
     save: (state, action: PayloadAction<Workspace>) => {
-      repo.setWorkspaces(state.displayed)
+      repo.data = state.displayed
       repo.save(action.payload)
     },
     showCreate: (state, action: PayloadAction<boolean>) => {
