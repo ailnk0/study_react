@@ -1,31 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import workspacesSlice from '../features/workspaces/workspacesSlice'
 
-import counter1Slice from '../features/counter/counter1Slice'
-import counter2Slice from '../features/counter/counter2Slice'
-
-const persistedCounter1 = persistReducer(
+const persistedWorkspacesReducer = persistReducer(
   {
-    key: 'counter1',
+    key: 'workspaces',
     storage
   },
-  counter1Slice
-)
-
-const persistedCounter2 = persistReducer(
-  {
-    key: 'counter2',
-    storage
-  },
-  counter2Slice
+  workspacesSlice
 )
 
 export const store = configureStore({
   reducer: {
-    counter1: persistedCounter1,
-    counter2: persistedCounter2
-  }
+    workspace: persistedWorkspacesReducer
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false
+    })
 })
 export const persistor = persistStore(store)
 

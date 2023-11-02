@@ -1,11 +1,21 @@
 import { Route, Routes } from 'react-router-dom'
-import { Counter } from './features/counter/Counter'
+import HomeLayout from './features/home/HomeLayout'
+import HomePage from './features/home/HomePage'
+import WorkspaceLayout from './features/workspaces/WorkspaceLayout'
+import WorkspacePage from './features/workspaces/WorkspacePage'
+import NotFoundPage from './NotFoundPage'
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Counter />} />
+        <Route path="/" element={<HomeLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="workspace/:id" element={<WorkspaceLayout />}>
+            <Route index element={<WorkspacePage />} />
+          </Route>
+        </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   )
