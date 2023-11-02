@@ -5,8 +5,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" />
-        <Route path="/counter" element={<Counter />} />
+        <Route path="/" element={<Counter />} />
       </Routes>
     </>
   )
