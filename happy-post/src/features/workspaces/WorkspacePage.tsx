@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hook'
 import { selectWorkspaceById, update } from './workspacesSlice'
 import { Box, Button, TextField } from '@mui/material'
@@ -6,24 +6,28 @@ import { useEffect, useState } from 'react'
 import { DEFAULT_WORKSPACE } from './repo'
 
 export default function WorkspacePage() {
+  const navigate = useNavigate()
   const { id } = useParams()
-  const wsId = parseInt(id ?? '-1')
-  const workspace = useAppSelector((state) => selectWorkspaceById(state, wsId)) ?? DEFAULT_WORKSPACE
+  const workspace = useAppSelector((state) => selectWorkspaceById(state, parseInt(id ?? '')))
   const dispatch = useAppDispatch()
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
 
   const handleUpdate = () => {
-    const copiedWorkspace = { ...workspace }
-    copiedWorkspace.title = title
-    copiedWorkspace.desc = desc
-    dispatch(update(copiedWorkspace))
+    const clone = { ...(workspace ?? DEFAULT_WORKSPACE) }
+    clone.title = title
+    clone.desc = desc
+    dispatch(update(clone))
   }
 
   useEffect(() => {
-    setTitle(workspace?.title ?? '')
-    setDesc(workspace?.desc ?? '')
-  }, [workspace])
+    if (!workspace) {
+      navigate('/404')
+      return
+    }
+    setTitle(workspace.title)
+    setDesc(workspace.desc)
+  }, [navigate, workspace])
 
   return (
     <Box>
