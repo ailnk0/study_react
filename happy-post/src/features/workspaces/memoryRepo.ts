@@ -7,7 +7,7 @@ export class MemoryWorkspacesRepo implements WorkspaceRepo {
   } = { sequence: 0, workspaces: [] }
 
   save(ws: Workspace): void {
-    ws.id = this.data.sequence++
+    ws.id = parseInt((this.data.sequence++).toString())
     this.data.workspaces.push(ws)
   }
   findById(id: number): Workspace | undefined {
