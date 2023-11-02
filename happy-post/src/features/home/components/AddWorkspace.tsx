@@ -12,6 +12,7 @@ import { create } from '../../workspaces/workspacesSlice'
 export default function AddWorkspace() {
   const [open, setOpen] = React.useState(false)
   const [title, setTitle] = React.useState('')
+  const [desc, setDesc] = React.useState('')
 
   const dispatch = useAppDispatch()
 
@@ -27,6 +28,7 @@ export default function AddWorkspace() {
     const workspace: Workspace = {
       id: 0,
       title: title,
+      desc: desc,
       collections: []
     }
 
@@ -49,8 +51,17 @@ export default function AddWorkspace() {
             label="Title"
             type="text"
             fullWidth
-            variant="standard"
             onChange={(e) => setTitle(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            id="desc"
+            label="Description"
+            type="text"
+            fullWidth
+            multiline
+            rows={4}
+            onChange={(e) => setDesc(e.target.value)}
           />
         </DialogContent>
         <DialogActions>

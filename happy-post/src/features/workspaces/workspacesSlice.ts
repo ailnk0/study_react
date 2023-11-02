@@ -14,11 +14,15 @@ const workspacesSlice = createSlice({
     create: (state, action: PayloadAction<Workspace>) => {
       repo.data = state.data
       repo.save(action.payload)
+    },
+    update: (state, action: PayloadAction<Workspace>) => {
+      repo.data = state.data
+      repo.update(action.payload)
     }
   }
 })
 
-export const { create } = workspacesSlice.actions
+export const { create, update } = workspacesSlice.actions
 
 export const selectAllWorkspace = (state: RootState) => {
   repo.data = state.workspace.data

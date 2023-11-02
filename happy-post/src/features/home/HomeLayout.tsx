@@ -1,6 +1,7 @@
 import { Box } from '@mui/material'
 import ActionBar from './components/ActionBar'
 import SideBar from './components/SideBar'
+import { Outlet } from 'react-router-dom'
 
 export default function HomeLayout() {
   return (
@@ -8,11 +9,13 @@ export default function HomeLayout() {
       <Box>
         <ActionBar />
       </Box>
-      <Box sx={{ display: 'flex', mt: 2, p: 2 }}>
-        <Box sx={{ maxWidth: '20rem' }}>
+      <Box sx={{ display: 'flex', mt: 2, p: 1 }}>
+        <Box sx={{ m: 1 }}>
           <SideBar />
         </Box>
-        <Box sx={{ flexGrow: 1 }}></Box>
+        <Box sx={{ flexGrow: 1 }}>
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   )

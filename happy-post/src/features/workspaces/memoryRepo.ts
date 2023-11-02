@@ -22,4 +22,12 @@ export class MemoryWorkspacesRepo implements WorkspaceRepo {
   count(): number {
     return this.data.workspaces.length
   }
+  update(ws: Workspace): Workspace | undefined {
+    const index = this.data.workspaces.findIndex((w) => w.id === ws.id)
+    if (index === -1) {
+      return undefined
+    }
+    this.data.workspaces[index] = ws
+    return ws
+  }
 }
