@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
-import workspaceSlice from '../features/workspaces/Slice'
+import workspaceSlice from '../features/workspaces/workspaceSlice'
 
 const persistConfig = {
   key: 'root',

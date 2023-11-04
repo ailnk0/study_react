@@ -1,40 +1,52 @@
+import * as React from 'react'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import { useAppDispatch, useAppSelector } from '../../../app/hooks'
-import { save, showCreate } from '../Slice'
-import { Workspace } from '../Workspace'
-import React from 'react'
+import { createWorkspace } from '../workspaceSlice'
+import { useAppDispatch } from '../../../app/hooks'
+import { workspace } from '../workspace'
 
-export default function Create() {
+export default function NewWorkspaceDlg() {
   const dispatch = useAppDispatch()
-  const workspaces = useAppSelector((state) => state.workspaces)
+
+  const [open, setOpen] = React.useState(false)
   const [title, setTitle] = React.useState('')
   const [desc, setDesc] = React.useState('')
 
-  const handleClose = () => {
-    dispatch(showCreate(false))
+  const handleClickOpen = () => {
+    setOpen(true)
   }
-  const handleOk = () => {
-    const workspace: Workspace = {
-      id: 0,
-      name: title,
-      desc: desc,
-      sequence: 0,
-      collections: []
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const handleCreate = () => {
+    try {
+      const ws = new workspace()
+      ws.title = title
+      ws.desc = desc
+      dispatch(createWorkspace(ws))
+      setOpen(false)
+    } catch (e) {
+      console.log('failed to create workspace', e)
+      // TODO: show error message
     }
-    dispatch(save(workspace))
-    dispatch(showCreate(false))
   }
 
   return (
-    <div>
-      <Dialog open={workspaces.isCreate} onClose={handleClose}>
-        <DialogTitle>Create Workspace</DialogTitle>
+    <React.Fragment>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        New Workspace
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Create New Workspace</DialogTitle>
         <DialogContent>
+          <DialogContentText>New workspace makes happy you.</DialogContentText>
           <TextField
             autoFocus
             margin="dense"
@@ -44,6 +56,7 @@ export default function Create() {
             fullWidth
             variant="standard"
             onChange={(e) => setTitle(e.target.value)}
+            value={title}
           />
           <TextField
             autoFocus
@@ -53,15 +66,17 @@ export default function Create() {
             type="text"
             fullWidth
             multiline
+            rows={4}
             variant="standard"
             onChange={(e) => setDesc(e.target.value)}
+            value={desc}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleOk}>Ok</Button>
+          <Button onClick={handleCreate}>Create</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </React.Fragment>
   )
 }
