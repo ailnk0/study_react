@@ -7,9 +7,9 @@ import ListItemText from '@mui/material/ListItemText'
 import DeleteIcon from '@mui/icons-material/Delete'
 import SendIcon from '@mui/icons-material/Send'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
-import { deleteWorkspaceById, selectAllWorkspaces } from '../../workspaces/workspaceSlice'
+import { deleteWorkspaceById, selectAllWorkspaces } from '../workspaceSlice'
 import { IconButton } from '@mui/material'
-import { workspace } from '../../workspaces/workspace'
+import { workspaceItem } from '../workspaceItem'
 import { useNavigate } from 'react-router-dom'
 
 export default function WorkspaceList() {
@@ -18,11 +18,11 @@ export default function WorkspaceList() {
   const dispatch = useAppDispatch()
   const workspaces = useAppSelector(selectAllWorkspaces)
 
-  const handleOpen = (_e: React.MouseEvent<HTMLElement, MouseEvent>, ws: workspace) => {
+  const handleOpen = (_e: React.MouseEvent<HTMLElement, MouseEvent>, ws: workspaceItem) => {
     navigate(`/workspaces/${ws.id}`)
   }
 
-  const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>, ws: workspace) => {
+  const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>, ws: workspaceItem) => {
     e.stopPropagation()
     dispatch(deleteWorkspaceById(ws.id))
   }

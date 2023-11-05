@@ -1,11 +1,13 @@
 import { repositoryItem } from '../../repository/repositoryItem'
 
-export class workspace implements repositoryItem {
+export class collectionItem implements repositoryItem {
   id: string = ''
   title: string = ''
   desc: string = ''
   created: number = Date.now()
   updated: number = Date.now()
   author: string = ''
-  collections: number[] = []
+  parent: string = ''
+  requests: string[] = []
+  folders: string[] = []
 }

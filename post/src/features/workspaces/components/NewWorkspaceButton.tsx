@@ -8,7 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { createWorkspace } from '../workspaceSlice'
 import { useAppDispatch } from '../../../app/hooks'
-import { workspace } from '../workspace'
+import { workspaceItem } from '../workspaceItem'
 
 export default function NewWorkspaceDlg() {
   const dispatch = useAppDispatch()
@@ -27,10 +27,10 @@ export default function NewWorkspaceDlg() {
 
   const handleCreate = () => {
     try {
-      const ws = new workspace()
-      ws.title = title
-      ws.desc = desc
-      dispatch(createWorkspace(ws))
+      const item = new workspaceItem()
+      item.title = title
+      item.desc = desc
+      dispatch(createWorkspace(item))
       setOpen(false)
     } catch (e) {
       console.log('failed to create workspace', e)

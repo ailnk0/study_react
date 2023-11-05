@@ -2,16 +2,38 @@ import { configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import workspaceSlice from '../features/workspaces/workspaceSlice'
+import collectionSlice from '../features/collections/collectionSlice'
+import requestSlice from '../features/requests/requestSlice'
 
-const persistConfig = {
-  key: 'root',
-  storage
-}
+const persistedWorkspaceReducer = persistReducer(
+  {
+    key: 'workspaces',
+    storage
+  },
+  workspaceSlice
+)
 
-const persistedReducer = persistReducer(persistConfig, workspaceSlice)
+const persistedCollectionReducer = persistReducer(
+  {
+    key: 'collections',
+    storage
+  },
+  collectionSlice
+)
+
+const persistedRequestReducer = persistReducer(
+  {
+    key: 'requests',
+    storage
+  },
+  requestSlice
+)
+
 export const store = configureStore({
   reducer: {
-    workspaces: persistedReducer
+    workspaces: persistedWorkspaceReducer,
+    collections: persistedCollectionReducer,
+    requests: persistedRequestReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

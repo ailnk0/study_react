@@ -1,5 +1,5 @@
 import { useRef, useEffect, RefObject } from 'react'
-import { Box } from '@mui/material'
+import { Box, Divider } from '@mui/material'
 import ActionBar from './components/ActionBar'
 import SideMenu from './components/SideMenu'
 import { Outlet } from 'react-router-dom'
@@ -28,9 +28,10 @@ export default function HomeLayout() {
         <ActionBar />
       </Box>
       <Box ref={contentsBodyRef} sx={{ display: 'flex', p: 2 }}>
-        <Box sx={{ borderRight: 1, borderColor: 'lightgray' }}>
+        <Box>
           <SideMenu />
         </Box>
+        <Divider orientation="vertical" />
         <Box sx={{ flexGrow: 1 }}>
           <Outlet />
         </Box>

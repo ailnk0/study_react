@@ -1,5 +1,6 @@
-import { Box, Button, ButtonGroup } from '@mui/material'
+import { Box, Button, ButtonGroup, Divider } from '@mui/material'
 import NewWorkspaceButton from '../../workspaces/components/NewWorkspaceButton'
+import CollectionList from '../../collections/components/CollectionList'
 
 export default function NestedList() {
   const buttons = [
@@ -9,22 +10,15 @@ export default function NestedList() {
   ]
 
   return (
-    <Box>
-      <Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            '& > *': {
-              m: 1
-            }
-          }}
-        >
-          <ButtonGroup size="small" aria-label="small button group">
-            {buttons}
-          </ButtonGroup>
-        </Box>
+    <Box sx={{ mr: 1 }}>
+      <Box sx={{ mb: 1 }}>
+        <ButtonGroup size="small" aria-label="small button group">
+          {buttons}
+        </ButtonGroup>
+      </Box>
+      <Divider />
+      <Box sx={{ mt: 2 }}>
+        <CollectionList />
       </Box>
     </Box>
   )

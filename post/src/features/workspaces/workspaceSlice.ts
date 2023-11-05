@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { memoryRepository } from '../../repository/memoryRepository'
-import { workspace } from './workspace'
+import { workspaceItem } from './workspaceItem'
 import { RootState } from '../../app/store'
 
 const repo = new memoryRepository()
@@ -11,10 +11,10 @@ const workspaceSlice = createSlice({
     data: repo._data
   },
   reducers: {
-    createWorkspace: (state, action: PayloadAction<workspace>) => {
+    createWorkspace: (state, action: PayloadAction<workspaceItem>) => {
       repo.data(state.data).save(action.payload)
     },
-    updateWorkspace: (state, action: PayloadAction<workspace>) => {
+    updateWorkspace: (state, action: PayloadAction<workspaceItem>) => {
       repo.data(state.data).save(action.payload)
     },
     deleteWorkspaceById: (state, action: PayloadAction<string>) => {
@@ -26,8 +26,8 @@ const workspaceSlice = createSlice({
 export const { createWorkspace, updateWorkspace, deleteWorkspaceById } = workspaceSlice.actions
 
 export const selectAllWorkspaces = (state: RootState) =>
-  repo.data(state.workspaces.data).findAll() as workspace[]
+  repo.data(state.workspaces.data).findAll() as workspaceItem[]
 export const selectWorkspaceById = (state: RootState, id: string) =>
-  repo.data(state.workspaces.data).findById(id) as workspace
+  repo.data(state.workspaces.data).findById(id) as workspaceItem
 
 export default workspaceSlice.reducer

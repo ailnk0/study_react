@@ -1,25 +1,25 @@
 import { Box, Button, Container, TextField, Typography } from '@mui/material'
-import { selectWorkspaceById, updateWorkspace } from './workspaceSlice'
+import { selectCollectionById, updateCollection } from './collectionSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import React, { useEffect } from 'react'
 
-export default function WorkspacePage() {
+export default function CollectionPage() {
   const navigate = useNavigate()
-  const { workspaceId } = useParams()
+  const { collectionId } = useParams()
   const [title, setTitle] = React.useState('')
   const [desc, setDesc] = React.useState('')
 
   const dispatch = useAppDispatch()
-  const item = useAppSelector((state) => selectWorkspaceById(state, workspaceId ?? ''))
+  const collection = useAppSelector((state) => selectCollectionById(state, collectionId ?? ''))
 
   const handleUpdate = () => {
     try {
-      const newWorkspace = Object.assign({}, item)
-      newWorkspace.title = title
-      newWorkspace.desc = desc
-      newWorkspace.updated = Date.now()
-      dispatch(updateWorkspace(newWorkspace))
+      const newCollection = Object.assign({}, collection)
+      newCollection.title = title
+      newCollection.desc = desc
+      newCollection.updated = Date.now()
+      dispatch(updateCollection(newCollection))
       // TODO: show success message
     } catch (e) {
       console.log('failed to update workspace', e)
@@ -28,15 +28,15 @@ export default function WorkspacePage() {
   }
 
   useEffect(() => {
-    setTitle(item.title)
-    setDesc(item.desc)
-  }, [item])
+    setTitle(collection.title)
+    setDesc(collection.desc)
+  }, [collection])
 
-  if (item) {
+  if (collection) {
     return (
       <Container>
         <Box mb={5}>
-          <Typography variant="h4">Workspace</Typography>
+          <Typography variant="h4">Collection</Typography>
         </Box>
         <Box mb={3}>
           <TextField
@@ -69,7 +69,7 @@ export default function WorkspacePage() {
     return (
       <Container>
         <Box mb={2}>
-          <Typography variant="h4">Workspace not found</Typography>
+          <Typography variant="h4">Collection not found</Typography>
         </Box>
         <Button variant="outlined" onClick={() => navigate('/')}>
           Go to Home
