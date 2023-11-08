@@ -1,9 +1,11 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { memoryRepository } from '../../repository/memoryRepository'
 import { RootState } from '../../app/store'
 import { collectionItem } from './collectionItem'
 
 const repo = new memoryRepository()
+
+const createWorkspace = createAction('workspaces/createWorkspace')
 
 const collectionSlice = createSlice({
   name: 'collections',
@@ -20,6 +22,11 @@ const collectionSlice = createSlice({
     deleteCollectionById: (state, action: PayloadAction<string>) => {
       repo.data(state.data).deleteById(action.payload)
     }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(createWorkspace, (_state, action) => {
+      console.log('createWorkspace is called', action.payload)
+    })
   }
 })
 
