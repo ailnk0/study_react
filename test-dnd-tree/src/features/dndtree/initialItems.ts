@@ -1,10 +1,4 @@
-export interface ItemType {
-  id: string;
-  label: string;
-  children?: ItemType[];
-}
-
-export const initialItems: ItemType[] = [
+export const initialItems = [
   {
     id: "grid",
     label: "Grid",
