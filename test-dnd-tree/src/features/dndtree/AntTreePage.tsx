@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import { Tree } from "antd";
 import type { TreeDataNode, TreeProps } from "antd";
 
-const x = 3;
-const y = 2;
-const z = 1;
 const defaultData: TreeDataNode[] = [
   {
     key: "grid",
@@ -29,7 +26,7 @@ export default function AntTreePage() {
   const [gData, setGData] = useState(defaultData);
   const [expandedKeys] = useState(["grid"]);
 
-  const onDragEnter: TreeProps["onDragEnter"] = (info) => {
+  const onDragEnter: TreeProps["onDragEnter"] = () => {
     // expandedKeys, set it when controlled is needed
     // setExpandedKeys(info.expandedKeys)
   };
