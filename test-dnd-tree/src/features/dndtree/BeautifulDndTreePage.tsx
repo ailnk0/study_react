@@ -5,31 +5,11 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import Box from "@mui/material/Box";
-import { TreeViewBaseItem } from "@mui/x-tree-view/models";
 import { useState } from "react";
 import { SimpleTreeView, TreeItem } from "@mui/x-tree-view";
+import { initialItems } from "./initialItems";
 
-const initialItems: TreeViewBaseItem[] = [
-  {
-    id: "grid",
-    label: "Data Grid",
-    children: [
-      { id: "grid-community", label: "@mui/x-data-grid" },
-      { id: "grid-pro", label: "@mui/x-data-grid-pro" },
-      { id: "grid-premium", label: "@mui/x-data-grid-premium" },
-    ],
-  },
-  {
-    id: "pickers",
-    label: "Date and Time Pickers",
-    children: [
-      { id: "pickers-community", label: "@mui/x-date-pickers" },
-      { id: "pickers-pro", label: "@mui/x-date-pickers-pro" },
-    ],
-  },
-];
-
-export default function DndTreePage() {
+export default function BeautifulDndTreePage() {
   const [items, setItems] = useState(initialItems);
 
   const onDragEnd = (result: DropResult) => {
