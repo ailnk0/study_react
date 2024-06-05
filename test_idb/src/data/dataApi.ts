@@ -6,13 +6,16 @@ export class DataApi {
   static async initDB() {
     const db = await openDB<HDBSchema>("hdb", 1, {
       upgrade(db) {
-        const wsStore = db.createObjectStore("wsItems", { keyPath: "id" });
-        wsStore.createIndex("by-updated", "updated");
-
-        const colStore = db.createObjectStore("colItems", {
-          keyPath: "id",
-        });
-        colStore.createIndex("by-updated", "updated");
+        db.createObjectStore("wsItems", { keyPath: "id" }).createIndex(
+          "by-updated",
+          "updated",
+          { unique: false }
+        );
+        db.createObjectStore("colItems", { keyPath: "id" }).createIndex(
+          "by-updated",
+          "updated",
+          { unique: false }
+        );
       },
     });
     return db;
@@ -81,11 +84,12 @@ export class DataApi {
   static async findAllByOrderByUpdatedDesc(
     storeName: StoreName
   ): Promise<ItemType[]> {
+    const items = [];
+
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readonly");
     const index = tx.objectStore(storeName).index("by-updated");
 
-    const items = [];
     let cursor = await index.openCursor(null, "prev");
     while (cursor) {
       items.push(cursor.value);
@@ -93,6 +97,7 @@ export class DataApi {
     }
 
     await tx.done;
+
     return items;
   }
 
@@ -101,18 +106,16 @@ export class DataApi {
     pageIndex: number,
     pageSize: number
   ): Promise<ItemType[]> {
+    const items = [];
+    const start = pageIndex * pageSize;
+
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readonly");
     const index = tx.objectStore(storeName).index("by-updated");
 
-    const items = [];
     let cursor = await index.openCursor(null, "prev");
-
-    const start = pageIndex * pageSize;
-    let skipped = 0;
-    while (cursor && skipped < start) {
-      cursor = await cursor.continue();
-      skipped++;
+    if (start > 0 && cursor) {
+      cursor = await cursor.advance(start);
     }
 
     while (cursor && items.length < pageSize) {
@@ -121,6 +124,7 @@ export class DataApi {
     }
 
     await tx.done;
+
     return items;
   }
 
