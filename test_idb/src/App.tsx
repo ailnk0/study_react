@@ -10,8 +10,8 @@ function App() {
   const [wsCount, setWsCount] = useState(0);
   const [title, setTitle] = useState("");
   const [delId, setDelId] = useState("");
-  const [itemIndex, setItemIndex] = useState("0");
-  const [itemCount, setItemCount] = useState("3");
+  const [pageIndex, setPageIndex] = useState("0");
+  const [pageSize, setPageSize] = useState("3");
 
   useEffect(() => {
     DataApi.findAll("wsItems").then((wsItems) => {
@@ -23,7 +23,7 @@ function App() {
   }, []);
 
   const loadSampleData = async () => {
-    const wsItems: WsItem[] = [
+    const sampleItems: WsItem[] = [
       {
         id: "",
         created: 0,
@@ -61,81 +61,75 @@ function App() {
       },
     ];
 
-    for (const wsItem of wsItems) {
-      await DataApi.save("wsItems", wsItem);
+    for (const sample of sampleItems) {
+      await DataApi.save("wsItems", sample);
     }
 
-    await DataApi.count("wsItems").then((count) => {
-      setWsCount(count);
-    });
-
-    DataApi.findAll("wsItems").then((wsItems) => {
-      setWs(wsItems);
-    });
+    const wsItems = await DataApi.findAll("wsItems");
+    setWs(wsItems);
+    const count = await DataApi.count("wsItems");
+    setWsCount(count);
   };
 
   const saveWs = async () => {
-    const wsItem: WsItem = {
-      id: uuidv4(),
-      created: 0,
-      updated: 0,
-      title: title,
-      desc: "desc",
-    };
+    try {
+      const wsItem: WsItem = {
+        id: uuidv4(),
+        created: 0,
+        updated: 0,
+        title: title,
+        desc: "desc",
+      };
 
-    await DataApi.save("wsItems", wsItem).then(() => {
-      DataApi.findAll("wsItems").then((wsItems) => {
-        setWs(wsItems);
-      });
-    });
+      await DataApi.save("wsItems", wsItem);
+      setTitle("");
 
-    await DataApi.count("wsItems").then((count) => {
+      const wsItems = await DataApi.findAll("wsItems");
+      setWs(wsItems);
+      const count = await DataApi.count("wsItems");
       setWsCount(count);
-    });
-
-    setTitle("");
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const delWs = async () => {
-    await DataApi.deleteById("wsItems", delId).then(() => {
-      DataApi.findAll("wsItems").then((wsItems) => {
-        setWs(wsItems);
-      });
-    });
+    await DataApi.deleteById("wsItems", delId);
 
-    setDelId("");
+    const wsItems = await DataApi.findAll("wsItems");
+    setWs(wsItems);
+    const count = await DataApi.count("wsItems");
+    setWsCount(count);
   };
 
-  const setList = async () => {
-    const i = parseInt(itemIndex);
-    const c = parseInt(itemCount);
-    await DataApi.findLatest("wsItems", i, c).then((wsItems) => {
-      setWs(wsItems);
-    });
+  const findPageByOrderByUpdatedDesc = async () => {
+    const pi = parseInt(pageIndex);
+    const ps = parseInt(pageSize);
+    const wsItems = await DataApi.findPageByOrderByUpdatedDesc(
+      "wsItems",
+      pi,
+      ps
+    );
+    setWs(wsItems);
   };
 
   const findAll = async () => {
-    await DataApi.findAll("wsItems").then((wsItems) => {
-      setWs(wsItems);
-    });
+    const wsItems = await DataApi.findAll("wsItems");
+    setWs(wsItems);
   };
 
-  const findAllByUpdated = async () => {
-    await DataApi.findAllByUpdated("wsItems").then((wsItems) => {
-      setWs(wsItems);
-    });
+  const findAllByOrderByUpdatedDesc = async () => {
+    const wsItems = await DataApi.findAllByOrderByUpdatedDesc("wsItems");
+    setWs(wsItems);
   };
 
   const deleteAll = async () => {
-    await DataApi.deleteAll("wsItems").then(() => {
-      DataApi.findAll("wsItems").then((wsItems) => {
-        setWs(wsItems);
-      });
-    });
+    await DataApi.deleteAll("wsItems");
 
-    await DataApi.count("wsItems").then((count) => {
-      setWsCount(count);
-    });
+    const wsItems = await DataApi.findAll("wsItems");
+    setWs(wsItems);
+    const count = await DataApi.count("wsItems");
+    setWsCount(count);
   };
 
   return (
@@ -163,26 +157,30 @@ function App() {
         <button onClick={findAll}>findAll</button>
       </div>
 
-      {/*findAllByUpdated*/}
+      {/*findAllByOrderByUpdatedDesc*/}
       <div>
-        <button onClick={findAllByUpdated}>findAllByUpdated</button>
+        <button onClick={findAllByOrderByUpdatedDesc}>
+          findAllByOrderByUpdatedDesc
+        </button>
       </div>
 
-      {/*FindLatest*/}
+      {/*findPageByOrderByUpdatedDesc*/}
       <div>
         <input
           type="text"
           placeholder="index"
-          onChange={(e) => setItemIndex(e.target.value)}
-          value={itemIndex}
+          onChange={(e) => setPageIndex(e.target.value)}
+          value={pageIndex}
         />
         <input
           type="text"
           placeholder="count"
-          onChange={(e) => setItemCount(e.target.value)}
-          value={itemCount}
+          onChange={(e) => setPageSize(e.target.value)}
+          value={pageSize}
         />
-        <button onClick={setList}>findLatest</button>
+        <button onClick={findPageByOrderByUpdatedDesc}>
+          findPageByOrderByUpdatedDesc
+        </button>
       </div>
 
       {/*Save*/}

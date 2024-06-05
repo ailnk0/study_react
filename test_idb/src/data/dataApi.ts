@@ -18,7 +18,7 @@ export class DataApi {
     return db;
   }
 
-  static async save(storeName: StoreName, item: ItemType) {
+  static async save(storeName: StoreName, item: ItemType): Promise<ItemType> {
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readwrite");
 
@@ -32,9 +32,14 @@ export class DataApi {
       item.updated = Date.now();
       await tx.objectStore(storeName).add(item);
     }
+
+    return item;
   }
 
-  static async findById(storeName: StoreName, id: string) {
+  static async findById(
+    storeName: StoreName,
+    id: string
+  ): Promise<ItemType | undefined> {
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readonly");
     const item = await tx.objectStore(storeName).get(id);
@@ -42,7 +47,7 @@ export class DataApi {
     return item;
   }
 
-  static async findAll(storeName: StoreName) {
+  static async findAll(storeName: StoreName): Promise<ItemType[]> {
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readonly");
     const items = await tx.objectStore(storeName).getAll();
@@ -50,14 +55,14 @@ export class DataApi {
     return items;
   }
 
-  static async deleteById(storeName: StoreName, id: string) {
+  static async deleteById(storeName: StoreName, id: string): Promise<void> {
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readwrite");
     await tx.objectStore(storeName).delete(id);
     await tx.done;
   }
 
-  static async existsById(storeName: StoreName, id: string) {
+  static async existsById(storeName: StoreName, id: string): Promise<boolean> {
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readonly");
     const exists = await tx.objectStore(storeName).get(id);
@@ -65,7 +70,7 @@ export class DataApi {
     return exists !== undefined;
   }
 
-  static async count(storeName: StoreName) {
+  static async count(storeName: StoreName): Promise<number> {
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readonly");
     const count = await tx.objectStore(storeName).count();
@@ -73,13 +78,15 @@ export class DataApi {
     return count;
   }
 
-  static async findAllByUpdated(storeName: StoreName) {
+  static async findAllByOrderByUpdatedDesc(
+    storeName: StoreName
+  ): Promise<ItemType[]> {
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readonly");
-    const indexStore = tx.objectStore(storeName).index("by-updated");
+    const index = tx.objectStore(storeName).index("by-updated");
 
     const items = [];
-    let cursor = await indexStore.openCursor(null, "prev");
+    let cursor = await index.openCursor(null, "prev");
     while (cursor) {
       items.push(cursor.value);
       cursor = await cursor.continue();
@@ -89,21 +96,26 @@ export class DataApi {
     return items;
   }
 
-  static async findLatest(storeName: StoreName, index: number, count: number) {
+  static async findPageByOrderByUpdatedDesc(
+    storeName: StoreName,
+    pageIndex: number,
+    pageSize: number
+  ): Promise<ItemType[]> {
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readonly");
-    const indexStore = tx.objectStore(storeName).index("by-updated");
+    const index = tx.objectStore(storeName).index("by-updated");
 
     const items = [];
-    let cursor = await indexStore.openCursor(null, "prev");
+    let cursor = await index.openCursor(null, "prev");
 
+    const start = pageIndex * pageSize;
     let skipped = 0;
-    while (cursor && skipped < index) {
+    while (cursor && skipped < start) {
       cursor = await cursor.continue();
       skipped++;
     }
 
-    while (cursor && items.length < count) {
+    while (cursor && items.length < pageSize) {
       items.push(cursor.value);
       cursor = await cursor.continue();
     }
@@ -112,7 +124,7 @@ export class DataApi {
     return items;
   }
 
-  static async deleteAll(storeName: StoreName) {
+  static async deleteAll(storeName: StoreName): Promise<void> {
     const db = await DataApi.initDB();
     const tx = db.transaction(storeName, "readwrite");
     await tx.objectStore(storeName).clear();
